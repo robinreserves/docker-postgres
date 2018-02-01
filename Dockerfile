@@ -1,9 +1,9 @@
-FROM       phusion/baseimage:0.9.12
+FROM       phusion/baseimage:latest
 MAINTAINER Abe Voelker <abe@abevoelker.com>
 
 ENV USERNAME postgres
 ENV PASSWORD password
-ENV VERSION  9.4
+ENV VERSION  10
 
 # Temporary hack around a Docker Hub `docker build` issue. See:
 # https://github.com/docker/docker/issues/6345#issuecomment-49245365
@@ -31,7 +31,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y wget
 
 # Add PostgreSQL Global Development Group apt source
-RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 
 # Add PGDG repository key
 RUN wget -qO - http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add -
@@ -48,20 +48,20 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
 # Install WAL-E dependencies
   libxml2-dev \
   libxslt1-dev \
-  python-dev \
-  python-pip \
+  python3-dev \
+  python3-pip \
   daemontools \
   libevent-dev \
   lzop \
   pv \
   libffi-dev \
   libssl-dev &&\
-  pip install virtualenv
+  pip3 install virtualenv
 
 # Install WAL-E into a virtualenv
 RUN virtualenv /var/lib/postgresql/wal-e &&\
   . /var/lib/postgresql/wal-e/bin/activate &&\
-  pip install wal-e &&\
+  pip3 install wal-e &&\
   ln -s /var/lib/postgresql/wal-e/bin/wal-e /usr/local/bin/wal-e
 
 # Create directory for storing secret WAL-E environment variables
@@ -107,7 +107,7 @@ CMD ["/data/scripts/start_postgres.sh"]
 # Keep Postgres log, config and storage outside of union filesystem
 VOLUME ["/var/log/postgresql", \
         "/var/log/supervisor", \
-        "/etc/postgresql/9.4/main", \
-        "/var/lib/postgresql/9.4/main"]
+        "/etc/postgresql/10/main", \
+        "/var/lib/postgresql/10/main"]
 
 EXPOSE 5432
