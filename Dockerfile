@@ -61,7 +61,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
 # Install WAL-E into a virtualenv
 RUN virtualenv /var/lib/postgresql/wal-e &&\
   . /var/lib/postgresql/wal-e/bin/activate &&\
-  pip3 install wal-e &&\
+  pip3 install wal-e google-cloud-storage &&\
   ln -s /var/lib/postgresql/wal-e/bin/wal-e /usr/local/bin/wal-e
 
 # Create directory for storing secret WAL-E environment variables
